@@ -9,7 +9,7 @@
 # - Don't forget to gitignore it!
 # - Change these to yours
 # Any other information needed?
-
+I selected four items from the variable of population in the original data to become new data
 
 #### Workspace setup ####
 # Use R Projects, not setwd().
