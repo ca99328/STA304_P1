@@ -1,0 +1,96 @@
+---
+title: "Observing the Impact of the COVID-19 on the People of Toronto from the Data of the Shelter"
+author: "Cheng Chen, 1004417696"
+data: "02/06/2022"
+output: pdf_document
+abstract: "The COVID-19 outbreak has resulted in the loss of a large number of jobs in Ontario, which has led to a significant increase in unemployment. The report will use the Shelter System Flow Data to examine the extent to which Covid-19 has reduced people's incomes and living conditions. The final data shows that during the epidemic period, the number of non-refugees who used the shelter system for the first time in the shelters increased significantly in proportion to the first time, which shows that the epidemic has indeed had a major blow to people's lives."
+bibliography: ref_list.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("kableExtra")
+install.packages("tidyverse")
+install.packages("opendatatoronto")
+library(tidyverse)
+library(kableExtra)
+```
+
+#1 Introduction
+
+  "COVID-19 broke out around the world in late 2019, and Canada was no exception. During this period, the city of Toronto, Ontario has gone through multiple  lockdowns to stop the spread of the virus. During the lockdown, almost every industry has been affected. The catering industry can only implement take-out and many other entertainment and service industries have been forced to shut down. For example, barber shops are not allowed to open. A 2021 news report indicated that Ontario lost more than 355,000 jobs to COVID-19 during 2020 @g . Unemployment in 2020 was the biggest drop on record, according to a report by government finance officials. It is conceivable that such unemployment has affected the income and living conditions of many people. How to help these people who cannot live because of the epidemic is a difficult problem that the government must solve. People who have lost their normal living conditions are likely to go to government-funded shelters, so this report will focus on data recorded in shelters between 2020 and 2022. By studying this type of data, we hope to find out how many people have lost their ability to live due to COVID-19, and what is the trend.
+First we searched for data from shelters, and finally selected the Shelter System Flow Data from The Shelter, Support & Housing Administration Division. At the same time, the source of this data and how to collect the data were researched. The data was then cleaned up. In this data, the population is classified into eight categories, because this report wants to study the overall trend and therefore does not need so many classifications, so the population classification is screened. Then start analyzing the data. People who use shelters for the first time between 2020 and 2022 are the primary study subjects for this report. And in order to compare the source of these new people, these people are classified as refugees or non-refugees. Graphics and tables showing the total change in shelter population between 2020 and 2022, and whether these people are refugees or not, compared to pre-pandemic shelter data. To determine what impact the COVID-19 has had on the people of Toronto, and whether these impacts are still ongoing."
+
+#2 Data
+
+ 2.1 Data source.
+ The data on which this report relies are derived from the Shelter System Flow Data. The Shelter System Flow Data is published by The Shelter, Support & Housing Administration Division, which is the department responsible for administering housing in Toronto and providing services to the homeless. This data contains information of the people experiencing homelessness entering and leaving the City of Toronto shelter system each month, such as their age and gender. The dataset can be found over the City of Toronto Open Data Portal, and it was last updated on January 17th, 2022.
+ 
+ 2.2 Methodology and Data Collection.
+ 
+ This dataset includes the people who had used the operate shelters, 24-hour respite sites and similar related services funded by the City of Toronto in the past three months, recorded through the information management system which is the Shelter Management Information System (SMIS) from January 2020 to January 2022. SMIS eliminates time-consuming manual tasks of paper forms, making it easier and faster for shelter staff to serve clients, and the data in the system is easier to keep and more accurate than data on paper forms. This dataset provides information on who is experiencing homelessness so that the City of Toronto can better serve the homeless and identify flaws in the functioning of the city's system. The advantage of this data set is that it will be updated on the fifteenth day of each month or the next working day, which ensures that the interval between each data update is similar, making each set of data more comparable. And this dataset is not just included people who are completely homeless, it also counts both people who have used the shelter system at least once in the past three months and people who are considered to be actively experiencing homelessness (people who were not discharged to permanent housing). This allows the government to observe trends in homelessness and develop more complete urban planning. However, this dataset only includes people using the Toronto government-funded overnight service with SMIS. Shelter services funded by other levels and shelter services that do not contain SMIS cannot be counted. In addition, those homeless people who spend the night outdoors are not included in this dataset. Based on the recent Street Needs Assessment, Shelter Support & Housing Administration estimated that about 18 percent of people who are experiencing homelessness are not recorded in this data.
+The Shelter Support & Housing Administration did not tell what, how or when the aforementioned Street Needs Assessment was. There are also some potential bias with this dataset. The period 2020-2022 is a special time for the covid-19 outbreak, a news article on January 9, 2022 wrote that 34 homeless shelters experienced virus outbreaks, which led to a shelter which provides isolation services is 95% full@i. This means that shelters with isolation facilities will take in larger numbers of homeless people during a virus outbreak. But there is no mention of shelter facilities in this dataset, which may make shelter data seem oddly varied. Also mentioned in the news are the homeless saying that the death of people from the virus outbreak in the shelters is breaking down the shelter system, they think it is difficult for them to find a medical center or a bed in the shelter and so they want the government to ask for international help. Government officials say the shelter system does not need outside help and can still function normally. This news provides two important points, one is that many homeless people died in the shelter because of the virus outbreak, and the other is that the homeless people have distrust of the government. Both of these points can lead to the same situation where homeless people no longer choose to go to government-funded shelters. If this happens, there will be an increase in the number of homeless people spending the night outside which can not counted by SMIS, and a decrease in the number of homeless people in shelters. Another potential bias is the arrival of winter, with a news article pointing out that the problem facing homeless people now is whether to choose to spend the night outside in the cold winter or go to a shelter to catch the virus@j. For this reason, the Toronto government has opened many temporary shelters, but it is not certain whether these temporary shelters have SMIS. Both low temperatures and virus outbreaks can lead to irregular changes in the data set. Increasing medical services in shelters may be a viable solution to this bias.
+
+ 2.3 Data Characteristics.
+ 
+ The Toronto Shelter System Flow contains 180 observations and 18 variables: _id, date(mmm-yy), population_group, returned_from_housing, returned_to_shelter, newly_identified, moved_to_housing, no_recent_shelter_use, actively_homeless, ageunder16, age16-24, age25-44, age45-64, age65over, gender_male, gender_female, gender_transgender and population_group_percentage. In population group, this dataset divides it into eight categories of people, they were: all populations, chronic, families, youth, single adult, refugees, non-refugees and indigenous. Since this report does not require such a detailed population group classification, we use filter to select the “all population”, “chronic”, “refugees” and “non-refugees” as new data. A sample view of the dataset is display below. @a 
+
+
+```{r, echo=FALSE}
+library(opendatatoronto)
+library(dplyr)
+
+# get package
+package <- show_package("ac77f532-f18b-427c-905c-4ae87ce69c93")
+package
+
+# get all resources for this package
+resources <- list_package_resources("ac77f532-f18b-427c-905c-4ae87ce69c93")
+
+# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+
+# load the first datastore resource as a sample
+data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+data
+```
+```{r, echo=FALSE}
+  new_data <- data %>% filter(population_group == "Chronic" | population_group == "All Population" | population_group == "Refugees" | population_group == ("Non-refugees"))
+head(new_data)
+```
+
+
+```{r, echo=FALSE}
+all_data <- new_data %>% filter(population_group == "All Population")
+re_data <- new_data %>% filter(population_group == "Refugees" | population_group == "Non-refugees")
+
+```
+
+```{r, echo=FALSE}
+all_data %>% ggplot(aes(x = `_id`, y = newly_identified, color = `date(mmm-yy)`)) + geom_point() + theme_classic()
+```
+Figure 1 is a point graph of time and people who are newly identified. It is based on all_data which is the data that only includes “All population”, because we want to observe all the newly defined people in shelters. Its x-axis is “_id”, and the “_id” in the dataset are sorted according to time. For example, 1317 represents January 2020, and then all the way to January 2022. In order to make it easier to see the specific time, each month is represented by a different color on the map. Its y-axis represents the people who are newly identified by shelters, which is the person who was recorded using the shelter system for the first time. Overall, this point graph is positive. The number of newly identified people in the first three months is particularly high, and there is a trend of outliers. This may be because the early 2020 was when the COVID-19 just broke out, and the cold temperature in winter led to a rapid increase in the number of people in shelters. After that, the overall development is positive. This shows that between 2020 and 2022, more and more people are coming to use the shelter system for the first time. That is to say, during the covid-19 period, more and more new people came to use the shelter.
+
+
+
+```{r, echo=FALSE}
+re_data %>% ggplot(mapping = aes(x = `date(mmm-yy)`, y = newly_identified, fill = population_group)) + geom_bar(stat = "identity") + theme_classic()
+
+```
+
+Figure 2 is a bar chart that still shows the relationship between time and the newly identified person. But it is based on re_data. The re_data includes only refugee and non-refugee data. And refugees and non-refugees are represented by different colors on the bar graph. From this graph, it can be seen that the number of non-refugees recorded by the shelter system for the first time is several times higher than that of refugees. This means that during the covid-19 period, many non-refugees may have poured into shelters due to the impact of the epidemic. A news report in 2018 showed that 40% of the people who used the shelters at the time belonged to refugees @h . This shows that the proportion of refugees was still quite large at that time. However, in this figure, it is found that the proportion of refugees has decreased from 2020 to 2022, and the proportion of non-refugees has increased.
+
+
+```{r, echo=FALSE}
+summary_table <- new_data %>% group_by(population_group) %>% summarise(min = min(actively_homeless),
+                                  max = max(actively_homeless),
+                                  mean = mean(actively_homeless))
+# change their orders, add or remove some of them
+knitr::kable(summary_table)
+```
+
+Table 1 @c counts the number of people who are considered as actively homeless for all population categories in the new_data. It contains the average, maximum and minimum number of actively homeless people. Actively homeless person is defined as someone who has used the shelter system at least once in the previous three months and did not move to permanent housing. As can be seen from the table, the average number of total people recorded overnight in shelters from 2020 to 2022 was approximately 8,306, while the average ratio of non-refugees to refugees recorded overnight in shelters was approximately 4.5:1. The average number of people recorded as chronically homeless is about 3,713. From the Toronto Street Needs Assessment of 2018, it records that the total estimated homeless population in Toronto was 8715, and the refugees was considered as 30 percent of the total homeless population @f . As mentioned before, The Shelter, Support & Housing Administration Division said that the most recent Toronto Street Needs Assessment estimated 18 percent more people than recorded by SMIS. But this does not prevent the data from showing a significant increase in the number of non-refugees using the shelter system between 2020 and 2022.
+
+#Reference
+
+
