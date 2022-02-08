@@ -6,6 +6,8 @@ output: pdf_document
 abstract: "The COVID-19 outbreak has resulted in the loss of a large number of jobs in Ontario, which has led to a significant increase in unemployment. The report will use the Shelter System Flow Data to examine the extent to which Covid-19 has reduced people's incomes and living conditions. The final data shows that during the epidemic period, the number of non-refugees who used the shelter system for the first time in the shelters increased significantly in proportion to the first time, which shows that the epidemic has indeed had a major blow to people's lives."
 bibliography: ref_list.bib
 ---
+。
+ footnote ^[https://github.com/ca99328/STA304_P1]
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
