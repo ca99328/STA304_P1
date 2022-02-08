@@ -1,5 +1,5 @@
 # starter_folder
 
-This repo....
+This report is designed to examine how COVID-19 is affecting the government's shelter system in Toronto
 
-It is organised as follows...
+It used package as tidyverse, kableExtra, opendatatoronto.
